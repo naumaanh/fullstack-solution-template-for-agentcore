@@ -59,8 +59,11 @@ export class ConfigManager {
       if (path.basename(configFile) !== "config.yaml") {
         throw new Error(`Configuration file '${configFile}' not found.`)
       }
-      const defaultConfigPath = path.join(__dirname, "..", "..", configFile)
+      const defaultConfigPath = path.join(__dirname, "..", "..", configFile) // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
       configPath = defaultConfigPath
+    }
+    if (!fs.existsSync(configPath)) {
+      throw new Error(`Configuration file ${configPath} does not exist. Please create config.yaml file.`)
     }
 
     try {
@@ -128,6 +131,7 @@ export class ConfigManager {
 
     for (const k of keys) {
       if (typeof value === "object" && value !== null && k in value) {
+        // nosemgrep: javascript.lang.security.audit.prototype-pollution.prototype-pollution-loop.prototype-pollution-loop — iterates over a trusted local YAML config object, not user-controlled input
         value = value[k]
       } else {
         return defaultValue
