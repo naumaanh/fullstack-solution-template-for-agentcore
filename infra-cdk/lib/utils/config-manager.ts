@@ -117,9 +117,9 @@ export class ConfigManager {
     const keys = key.split(".")
     let value: any = this.config
 
-    // nosemgrep: javascript.lang.security.audit.prototype-pollution.prototype-pollution-loop.prototype-pollution-loop — iterates over a trusted local YAML config object, not user-controlled input
     for (const k of keys) {
       if (typeof value === "object" && value !== null && k in value) {
+        // nosemgrep: javascript.lang.security.audit.prototype-pollution.prototype-pollution-loop.prototype-pollution-loop — iterates over a trusted local YAML config object, not user-controlled input
         value = value[k]
       } else {
         return defaultValue
