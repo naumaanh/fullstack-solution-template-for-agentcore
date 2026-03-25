@@ -1,4 +1,3 @@
-// nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal — all path.join/resolve calls in this CDK stack use __dirname with static relative segments; no user input
 import * as cdk from "aws-cdk-lib"
 import * as cognito from "aws-cdk-lib/aws-cognito"
 import * as ec2 from "aws-cdk-lib/aws-ec2"
@@ -124,7 +123,7 @@ export class BackendStack extends cdk.NestedStack {
     if (deploymentType === "zip") {
       // ZIP DEPLOYMENT: Use Lambda to package and upload to S3 (no Docker required)
       const repoRoot = path.resolve(__dirname, "..", "..")
-      const patternDir = path.join(repoRoot, "patterns", pattern)
+      const patternDir = path.join(repoRoot, "patterns", pattern) // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
 
       // Create S3 bucket for agent code
       const agentCodeBucket = new s3.Bucket(this, "AgentCodeBucket", {

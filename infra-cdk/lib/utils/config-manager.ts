@@ -1,4 +1,3 @@
-// nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal — configFile is a hardcoded filename from the CDK app entry point, not user input
 import * as fs from "fs"
 import * as path from "path"
 import * as yaml from "yaml"
@@ -48,7 +47,7 @@ export class ConfigManager {
   }
 
   private _loadConfig(configFile: string): AppConfig {
-    const configPath = path.join(__dirname, "..", "..", configFile)
+    const configPath = path.join(__dirname, "..", "..", configFile) // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
 
     if (!fs.existsSync(configPath)) {
       throw new Error(`Configuration file ${configPath} does not exist. Please create config.yaml file.`)
