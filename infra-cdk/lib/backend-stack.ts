@@ -260,7 +260,7 @@ export class BackendStack extends cdk.NestedStack {
     })
     // Preserve logical ID from L1 migration so CloudFormation updates in-place
     // rather than replacing (which would cause an AlreadyExists naming conflict)
-    ;(memory.node.defaultChild as cdk.CfnResource).overrideLogicalId("AgentMemory")
+    ;(memory.node.findChild("Memory") as cdk.CfnResource).overrideLogicalId("AgentMemory")
     const memoryId = memory.memoryId
     const memoryArn = memory.memoryArn
 
@@ -801,7 +801,7 @@ export class BackendStack extends cdk.NestedStack {
     })
     // Preserve logical ID from L1 migration so CloudFormation updates in-place
     // rather than replacing (which would cause an AlreadyExists naming conflict)
-    ;(gateway.node.defaultChild as cdk.CfnResource).overrideLogicalId("AgentCoreGateway")
+    ;(gateway.node.findChild("Resource") as cdk.CfnResource).overrideLogicalId("AgentCoreGateway")
 
     // Create Gateway Target using L3 construct
     const gatewayTarget = gateway.addLambdaTarget("GatewayTarget", {
@@ -813,7 +813,7 @@ export class BackendStack extends cdk.NestedStack {
     })
     // Preserve logical ID from L1 migration so CloudFormation updates in-place
     // rather than replacing (which would cause an AlreadyExists naming conflict)
-    ;(gatewayTarget.node.defaultChild as cdk.CfnResource).overrideLogicalId("GatewayTarget")
+    ;(gatewayTarget.node.findChild("Resource") as cdk.CfnResource).overrideLogicalId("GatewayTarget")
 
     // Store AgentCore Gateway URL in SSM for AgentCore Runtime access
     new ssm.StringParameter(this, "GatewayUrlParam", {
