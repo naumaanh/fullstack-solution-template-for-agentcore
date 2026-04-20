@@ -41,7 +41,7 @@ We chose Lambda targets for the following production advantages:
 
 ### Gateway Configuration
 
-The gateway is created using AWS CDK L1 constructs with the following configuration:
+The gateway is created using AWS CDK L2/L3 constructs with the following configuration:
 
 - **Protocol Type**: MCP (Model Context Protocol)
 - **Authorization**: Custom JWT with Cognito integration
@@ -189,14 +189,14 @@ When defining tool specs for Gateway, use these types:
 
 ## Key Components
 
-### 1. Gateway L1 Construct
+### 1. Gateway L2/L3 Constructs
 
-The gateway is created using native CloudFormation L1 constructs in `infra-cdk/lib/backend-stack.ts`:
+The gateway is created using CDK L2/L3 constructs from `@aws-cdk/aws-bedrock-agentcore-alpha` in `infra-cdk/lib/backend-stack.ts`:
 
-- `CfnGateway`: Creates AgentCore Gateway with MCP protocol
-- `CfnGatewayTarget`: Configures Lambda targets with tool schemas
+- `agentcore.Gateway`: Creates AgentCore Gateway with MCP protocol
+- `gateway.addLambdaTarget(...)`: Configures Lambda targets with tool schemas
 - JWT authorization configured via Cognito
-- Automatic lifecycle management by CloudFormation
+- Automatic dependency management and lifecycle handled by CDK
 
 ### 2. Sample Tool Lambda
 
@@ -405,11 +405,10 @@ aws bedrock-agentcore-control update-gateway \
 Or update the gateway construct in CDK:
 
 ```typescript
-const gateway = new bedrockagentcore.CfnGateway(this, "AgentCoreGateway", {
-  name: `${config.stack_name_base}-gateway`,
-  roleArn: gatewayRole.roleArn,
-  protocolType: "MCP",
-  exceptionLevel: "DEBUG", // Add this line for detailed error messages
+const gateway = new agentcore.Gateway(this, "AgentCoreGateway", {
+  gatewayName: `${config.stack_name_base}-gateway`,
+  role: gatewayRole,
+  exceptionLevel: agentcore.GatewayExceptionLevel.DEBUG, // Add this line for detailed error messages
   // ... rest of configuration
 })
 ```
